@@ -1,0 +1,90 @@
+<div
+  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-200 p-4"
+>
+  <div class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
+    <h2 class="text-3xl font-bold text-center text-indigo-600 mb-2">
+      ¡Bienvenido de nuevo!
+    </h2>
+    <p class="text-sm text-center text-gray-500 mb-6">
+      Inicia sesión para acceder a tu cuenta
+    </p>
+
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Correo electrónico</label
+        >
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          placeholder="jhondoe@gmail.com"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Contraseña</label
+        >
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          placeholder="••••••••"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+      </div>
+
+      <button
+        type="button"
+        (click)="onLogin()"
+        [disabled]="loading"
+        class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 flex justify-center items-center"
+      >
+        <ng-container *ngIf="!loading; else loadingSpinner">
+          Iniciar sesión
+        </ng-container>
+        <ng-template #loadingSpinner>
+          <svg
+            class="animate-spin h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"
+            ></path>
+          </svg>
+        </ng-template>
+      </button>
+    </form>
+
+    <div class="flex items-center my-4">
+      <div class="flex-grow h-px bg-gray-300"></div>
+      <span class="px-2 text-sm text-gray-500">¿No tienes cuenta?</span>
+      <div class="flex-grow h-px bg-gray-300"></div>
+    </div>
+
+    <div class="text-center">
+      <a
+        routerLink="/auth/register"
+        class="text-indigo-600 font-semibold hover:underline hover:text-indigo-800 transition"
+      >
+        Regístrate aquí
+      </a>
+    </div>
+  </div>
+</div>
