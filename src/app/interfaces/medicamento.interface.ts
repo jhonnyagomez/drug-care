@@ -13,4 +13,5 @@ export interface Medicamento {
   color: 'blue' | 'green' | 'purple' | 'yellow' | 'red';
   fechaCreacion: Date;
   activo: boolean;
+  ultimaActualizacion?: Date; // Nuevo campo para rastrear actualizaciones
 }

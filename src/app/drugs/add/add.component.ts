@@ -20,12 +20,36 @@ export class AddComponent {
   medicamento: Medicamento | null = null;
   error: string = '';
 
+  // Colores disponibles para asignación automática
+  private readonly colores: ('blue' | 'green' | 'purple' | 'yellow' | 'red')[] =
+    ['blue', 'green', 'purple', 'yellow', 'red'];
+
+  // Estado del acordeón
+  accordionState = {
+    contraindications: false,
+    warnings: false,
+  };
+
   constructor(
     private http: HttpClient,
     private auth: Auth,
     private firestore: Firestore,
     private router: Router
   ) {}
+
+  /**
+   * Genera un color aleatorio para el medicamento
+   */
+  private getRandomColor(): 'blue' | 'green' | 'purple' | 'yellow' | 'red' {
+    return this.colores[Math.floor(Math.random() * this.colores.length)];
+  }
+
+  /**
+   * Alterna el estado del acordeón
+   */
+  toggleAccordion(section: 'contraindications' | 'warnings') {
+    this.accordionState[section] = !this.accordionState[section];
+  }
 
   buscarMedicamento() {
     this.error = '';
@@ -50,7 +74,7 @@ export class AddComponent {
         const result = response.results[0];
 
         this.medicamento = {
-          id: uuidv4(),
+          id: this.uuidv4(),
           genericName: result.openfda?.generic_name || [],
           purpose: result.purpose || [],
           indicationsAndUsage: result.indications_and_usage || [],
@@ -61,9 +85,15 @@ export class AddComponent {
           horaInicio: '',
           proximaDosis: new Date(),
           estado: 'proximo',
-          color: 'blue',
+          color: this.getRandomColor(), // Color asignado automáticamente
           fechaCreacion: new Date(),
           activo: true,
+        };
+
+        // Reset accordion state
+        this.accordionState = {
+          contraindications: false,
+          warnings: false,
         };
       },
       error: () => {
@@ -74,6 +104,12 @@ export class AddComponent {
 
   guardarMedicamento() {
     if (!this.medicamento) return;
+
+    // Validar campos requeridos
+    if (!this.medicamento.frecuenciaHoras || !this.medicamento.horaInicio) {
+      this.error = 'Debe completar todos los campos requeridos.';
+      return;
+    }
 
     const hora = this.medicamento.horaInicio;
     const ahora = new Date();
@@ -126,23 +162,34 @@ export class AddComponent {
       .then(() => {
         console.log('✅ Medicamento guardado en Firestore.');
       })
-      .finally(
-        () => {
-          this.router.navigate(['/dashboard']);
-        }
-      )
+      .finally(() => {
+        this.router.navigate(['/dashboard']);
+      })
       .catch((error) => {
         console.error('❌ Error al guardar en Firestore:', error);
         this.error = 'No se pudo guardar el medicamento.';
       });
-
   }
-}
-function uuidv4(): string {
-  // Simple UUID v4 generator
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0,
-      v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+
+  cancelar() {
+    this.medicamento = null;
+    this.nombreMedicamento = '';
+    this.error = '';
+  }
+
+  navegarAtras() {
+    this.router.navigate(['/dashboard']);
+  }
+
+  private uuidv4(): string {
+    // Simple UUID v4 generator
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0,
+          v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+  }
 }

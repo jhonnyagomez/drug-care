@@ -1,6 +1,4 @@
-<!-- Dashboard Component Template -->
 <div class="min-h-screen bg-gray-50">
-  <!-- Header -->
   <header class="bg-white shadow-sm border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
@@ -8,8 +6,13 @@
           <h1 class="text-2xl font-bold text-gray-900">💊 MediReminder</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="text-sm text-gray-500">{{ obtenerSaludo() }}, {{ nombreUsuario }}</span>
-          <button (click)="cerrarSesion()" class="text-sm text-red-600 hover:text-red-800 font-medium">
+          <span class="text-sm text-gray-500"
+            >{{ obtenerSaludo() }}, {{ nombreUsuario }}</span
+          >
+          <button
+            (click)="cerrarSesion()"
+            class="text-sm text-red-600 hover:text-red-800 font-medium"
+          >
             Cerrar sesión
           </button>
         </div>
@@ -17,58 +20,123 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
-
-      <!-- Page Title and Add Button -->
       <div class="flex justify-between items-center mb-6">
         <div>
           <h2 class="text-3xl font-bold text-gray-900">Mis Medicamentos</h2>
-          <p class="text-gray-600 mt-1">Gestiona tus recordatorios de medicamentos</p>
+          <p class="text-gray-600 mt-1">
+            Gestiona tus recordatorios de medicamentos
+          </p>
         </div>
-        <button (click)="irAgregarMedicamento()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-sm transition-colors duration-200 flex items-center space-x-2">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        <button
+          (click)="irAgregarMedicamento()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-sm transition-colors duration-200 flex items-center space-x-2"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            ></path>
           </svg>
           <span>Agregar Medicamento</span>
         </button>
       </div>
 
-      <!-- Empty State (mostrar cuando no hay medicamentos) -->
       <div class="text-center py-12" *ngIf="medicamentos.length === 0">
         <div class="mx-auto h-24 w-24 text-gray-400 mb-4">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            class="w-full h-full"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+            ></path>
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">No tienes medicamentos registrados</h3>
-        <p class="text-gray-500 mb-6">Comienza agregando tu primer medicamento para recibir recordatorios.</p>
-        <button (click)="irAgregarMedicamento()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-sm transition-colors duration-200">
+        <h3 class="text-lg font-medium text-gray-900 mb-2">
+          No tienes medicamentos registrados
+        </h3>
+        <p class="text-gray-500 mb-6">
+          Comienza agregando tu primer medicamento para recibir recordatorios.
+        </p>
+        <button
+          (click)="irAgregarMedicamento()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-sm transition-colors duration-200"
+        >
           Agregar mi primer medicamento
         </button>
       </div>
 
-      <!-- Lista de Medicamentos (mostrar cuando hay medicamentos) -->
-      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3" *ngIf="medicamentos.length > 0">
-
-        <!-- Tarjeta de Medicamento -->
-        <div *ngFor="let medicamento of medicamentos" (click)="verDetalleMedicamento(medicamento)" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 cursor-pointer">
+      <div
+        class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+        *ngIf="medicamentos.length > 0"
+      >
+        <div
+          *ngFor="let medicamento of medicamentos"
+          (click)="abrirModalComingSoon(); $event.stopPropagation()"
+          class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 cursor-pointer"
+          [class.ring-2]="medicamento.estado === 'proximo'"
+          [class.ring-yellow-300]="medicamento.estado === 'proximo'"
+          [class.ring-red-300]="medicamento.estado === 'vencido'"
+        >
           <div class="flex items-start justify-between mb-4">
             <div class="flex items-center space-x-3">
-              <div [ngClass]="obtenerClasesColor(medicamento.color)" class="p-2 rounded-lg">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+              <div
+                [ngClass]="obtenerClasesColor(medicamento.color)"
+                class="p-2 rounded-lg"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                  ></path>
                 </svg>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-gray-900">{{ obtenerNombrePrincipal(medicamento) }}</h3>
-                <p class="text-sm text-gray-500">{{ obtenerDosisPrincipal(medicamento) }}</p>
+                <h3 class="text-lg font-semibold text-gray-900">
+                  {{ obtenerNombrePrincipal(medicamento) }}
+                </h3>
+                <p
+                  class="text-sm text-gray-500"
+                  *ngIf="obtenerProposito(medicamento) !== 'Medicamento'"
+                >
+                  {{ obtenerProposito(medicamento) }}
+                </p>
               </div>
             </div>
             <button class="text-gray-400 hover:text-gray-600">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                ></path>
               </svg>
             </button>
           </div>
@@ -76,117 +144,245 @@
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm text-gray-600">Frecuencia:</span>
-              <span class="text-sm font-medium text-gray-900">{{ obtenerTextoFrecuencia(medicamento.frecuenciaHoras) }}</span>
+              <span class="text-sm font-medium text-gray-900">
+                {{ obtenerTextoFrecuencia(medicamento.frecuenciaHoras) }}
+              </span>
             </div>
 
             <div class="flex items-center justify-between">
               <span class="text-sm text-gray-600">Próxima dosis:</span>
-              <span class="text-sm font-medium text-blue-600">{{ formatearHora(medicamento.proximaDosis) }}</span>
+              <span
+                class="text-sm font-medium"
+                [ngClass]="{
+                  'text-red-600': medicamento.estado === 'vencido',
+                  'text-yellow-600': medicamento.estado === 'proximo',
+                  'text-blue-600': medicamento.estado === 'activo'
+                }"
+              >
+                {{ formatearFechaHora(medicamento.proximaDosis) }}
+              </span>
+            </div>
+
+            <div
+              class="flex items-center justify-between"
+              *ngIf="medicamento.estado"
+            >
+              <span class="text-sm text-gray-600">Estado:</span>
+              <span
+                [ngClass]="obtenerClasesEstado(medicamento.estado)"
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+              >
+                {{ obtenerTextoEstado(medicamento.estado) }}
+              </span>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-sm text-gray-600">Estado:</span>
-              <span [ngClass]="obtenerClasesEstado(medicamento.estado)" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-                {{ obtenerTextoEstado(medicamento.estado) }}
+              <span class="text-sm text-gray-600">Hora de inicio:</span>
+              <span class="text-sm font-medium text-gray-900">
+                {{ medicamento.horaInicio || "No especificada" }}
+              </span>
+            </div>
+
+            <div
+              class="flex items-start justify-between gap-2"
+              *ngIf="
+                obtenerDosisPrincipal(medicamento) !== 'Dosis no especificada'
+              "
+            >
+              <span class="text-sm text-gray-600">Dosis:</span>
+              <span
+                class="text-sm font-medium text-gray-900 max-h-16 overflow-y-auto"
+              >
+                {{ obtenerDosisPrincipal(medicamento) }}
               </span>
             </div>
           </div>
 
           <div class="mt-4 pt-4 border-t border-gray-100">
             <div class="flex justify-between items-center">
-              <button (click)="verDetalleMedicamento(medicamento); $event.stopPropagation()" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+              <button
+                (click)="abrirModalComingSoon(); $event.stopPropagation()"
+                class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              >
                 Ver detalles
               </button>
+
               <div class="flex space-x-2">
-                <button (click)="editarMedicamento(medicamento); $event.stopPropagation()" class="text-sm text-gray-500 hover:text-gray-700">
-                  Editar
+                <button
+                  (click)="
+                    marcarComoTomado(medicamento); $event.stopPropagation()
+                  "
+                  class="text-sm text-green-600 hover:text-green-800 font-medium"
+                  *ngIf="
+                    medicamento.estado === 'proximo' ||
+                    medicamento.estado === 'vencido'
+                  "
+                >
+                  Marcar tomado
                 </button>
-                <button (click)="eliminarMedicamento(medicamento); $event.stopPropagation()" class="text-sm text-red-500 hover:text-red-700">
+                <button
+                  (click)="
+                    eliminarMedicamento(medicamento); $event.stopPropagation()
+                  "
+                  class="text-sm text-red-500 hover:text-red-700"
+                >
                   Eliminar
                 </button>
               </div>
             </div>
           </div>
         </div>
-
       </div>
 
-      <!-- Quick Stats (opcional) -->
-      <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4" *ngIf="medicamentos.length > 0">
-        <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
+      <!-- Panel de estadísticas mejorado -->
+      <div
+        class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+        *ngIf="medicamentos.length > 0"
+      >
+        <div
+          class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200"
+        >
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <div class="bg-blue-100 p-2 rounded-lg">
-                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <svg
+                    class="w-6 h-6 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
                   </svg>
                 </div>
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Medicamentos activos</dt>
-                  <dd class="text-lg font-medium text-gray-900">{{ medicamentosActivos }}</dd>
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Medicamentos activos
+                  </dt>
+                  <dd class="text-lg font-medium text-gray-900">
+                    {{ contarMedicamentosActivos() }}
+                  </dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
+        <div
+          class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200"
+        >
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <div class="bg-green-100 p-2 rounded-lg">
-                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <svg
+                    class="w-6 h-6 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
                   </svg>
                 </div>
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Próxima dosis</dt>
-                  <dd class="text-lg font-medium text-gray-900">{{ proximaDosisHora }}</dd>
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Próxima dosis
+                  </dt>
+                  <dd class="text-lg font-medium text-gray-900">
+                    {{ obtenerInfoProximaDosis().hora }}
+                  </dd>
+                  <dd
+                    class="text-sm text-gray-600 truncate"
+                    *ngIf="obtenerInfoProximaDosis().nombre"
+                  >
+                    {{ obtenerInfoProximaDosis().nombre }}
+                  </dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
+        <div
+          class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200"
+        >
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <div class="bg-yellow-100 p-2 rounded-lg">
-                  <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <svg
+                    class="w-6 h-6 text-yellow-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
                   </svg>
                 </div>
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Dosis hoy</dt>
-                  <dd class="text-lg font-medium text-gray-900">{{ dosisHoy }} de {{ totalDosisHoy }}</dd>
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Total medicamentos
+                  </dt>
+                  <dd class="text-lg font-medium text-gray-900">
+                    {{ medicamentos.length }}
+                  </dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
+        <div
+          class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200"
+        >
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <div class="bg-purple-100 p-2 rounded-lg">
-                  <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                  <svg
+                    class="w-6 h-6 text-purple-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                    ></path>
                   </svg>
                 </div>
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Adherencia</dt>
-                  <dd class="text-lg font-medium text-gray-900">{{ adherencia }}%</dd>
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Dosis hoy
+                  </dt>
+                  <dd class="text-lg font-medium text-gray-900">
+                    {{ dosisHoy }}/{{ totalDosisHoy }}
+                  </dd>
                 </dl>
               </div>
             </div>
@@ -194,6 +390,60 @@
         </div>
       </div>
 
+      <div
+        class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+        *ngIf="
+          medicamentos.length > 0 && obtenerProximasDosisDelDia().length > 0
+        "
+      >
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+          Próximas dosis de hoy
+        </h3>
+        <div class="space-y-3">
+          <div
+            *ngFor="let dosis of obtenerProximasDosisDelDia().slice(0, 5)"
+            class="flex items-center justify-between py-2 px-3 rounded-lg"
+            [ngClass]="{
+              'bg-yellow-50 border border-yellow-200':
+                dosis.estado === 'proximo',
+              'bg-gray-50': dosis.estado === 'pendiente'
+            }"
+          >
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-2 h-2 rounded-full"
+                [ngClass]="{
+                  'bg-yellow-500': dosis.estado === 'proximo',
+                  'bg-gray-400': dosis.estado === 'pendiente'
+                }"
+              ></div>
+              <span class="text-sm font-medium text-gray-900">
+                {{ dosis.medicamento }}
+              </span>
+            </div>
+            <span class="text-sm text-gray-600">
+              {{ formatearHora(dosis.hora) }}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
+</div>
+
+<!-- Modal "Coming soon!" -->
+<div
+  *ngIf="mostrarModalComingSoon"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+>
+  <div class="bg-white rounded-xl shadow-lg p-6 w-80 text-center relative">
+    <h2 class="text-lg font-semibold mb-4">Coming soon!</h2>
+    <p class="text-gray-600 mb-6">Esta funcionalidad estará disponible pronto.</p>
+    <button
+      (click)="cerrarModalComingSoon()"
+      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+    >
+      Cerrar
+    </button>
+  </div>
 </div>

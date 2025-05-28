@@ -1,126 +1,308 @@
-<div class="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md space-y-4">
-  <h2 class="text-xl font-semibold text-gray-800">Agregar Medicamento</h2>
-
-  <form
-    (ngSubmit)="buscarMedicamento()"
-    #formMedicamento="ngForm"
-    class="space-y-4"
-  >
-    <div>
-      <label for="nombre" class="block text-sm font-medium text-gray-700"
-        >Nombre del medicamento</label
-      >
-      <input
-        type="text"
-        id="nombre"
-        name="nombre"
-        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-        [(ngModel)]="nombreMedicamento"
-        required
-      />
-    </div>
-
-    <button
-      type="submit"
-      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Buscar
-    </button>
-  </form>
-
-  <div *ngIf="medicamento">
-    <h3 class="text-lg font-semibold text-green-600">Medicamento encontrado</h3>
-
-    <div class="mt-4">
-      <p>
-        <strong>Nombre genérico:</strong>
-        {{ medicamento.genericName.join(", ") }}
-      </p>
-      <p>
-        <strong>Indicaciones:</strong>
-        {{ medicamento.indicationsAndUsage.join(" ") }}
-      </p>
-      <p>
-        <strong>Dosis:</strong>
-        {{ medicamento.dosageAndAdministration.join(" ") }}
-      </p>
-      <p>
-        <strong>Contraindicaciones:</strong>
-        {{
-          medicamento.contraindications.length > 0
-            ? medicamento.contraindications.join(" ")
-            : "No disponible"
-        }}
-      </p>
-
-      <p>
-        <strong>Advertencias:</strong>
-        {{
-          medicamento.warningsAndPrecautions.length > 0
-            ? medicamento.warningsAndPrecautions.join(" ")
-            : "No disponible"
-        }}
-      </p>
-    </div>
-
-    <form (ngSubmit)="guardarMedicamento()" class="mt-6 space-y-4">
-      <div>
-        <label for="frecuencia" class="block text-sm font-medium text-gray-700"
-          >Frecuencia (horas)</label
-        >
-        <input
-          type="number"
-          id="frecuencia"
-          name="frecuencia"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          [(ngModel)]="medicamento.frecuenciaHoras"
-          required
-        />
-      </div>
-
-      <div>
-        <label for="horaInicio" class="block text-sm font-medium text-gray-700"
-          >Hora de inicio</label
-        >
-        <input
-          type="time"
-          id="horaInicio"
-          name="horaInicio"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          [(ngModel)]="medicamento.horaInicio"
-          required
-        />
-      </div>
-
-      <div>
-        <label for="color" class="block text-sm font-medium text-gray-700"
-          >Color</label
-        >
-        <select
-          id="color"
-          name="color"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          [(ngModel)]="medicamento.color"
-          required
-        >
-          <option value="blue">Azul</option>
-          <option value="green">Verde</option>
-          <option value="purple">Morado</option>
-          <option value="yellow">Amarillo</option>
-          <option value="red">Rojo</option>
-        </select>
-      </div>
-
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="bg-white rounded-xl shadow-sm border p-6">
+    <!-- Header con botón de regreso -->
+    <div class="flex items-center mb-6">
       <button
-        type="submit"
-        class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        (click)="navegarAtras()"
+        class="mr-4 p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
       >
-        Guardar medicamento
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
       </button>
-    </form>
-  </div>
+      <h2 class="text-2xl font-semibold text-gray-800">Agregar Medicamento</h2>
+    </div>
 
-  <div *ngIf="error" class="text-red-600 mt-4">
-    {{ error }}
+    <!-- Formulario de búsqueda -->
+    <form
+      (ngSubmit)="buscarMedicamento()"
+      #formBusqueda="ngForm"
+      class="space-y-4"
+    >
+      <div>
+        <label
+          for="nombre"
+          class="block text-sm font-medium text-gray-700 mb-2"
+        >
+          Nombre del medicamento
+        </label>
+        <div class="flex space-x-3">
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            class="flex-1 border border-gray-300 rounded-md shadow-sm p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="ej. Tylenol, Aspirina, Ibuprofeno..."
+            [(ngModel)]="nombreMedicamento"
+            required
+          />
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            Buscar
+          </button>
+        </div>
+        <p class="text-xs text-gray-500 mt-1">
+          Ingrese el nombre comercial del medicamento
+        </p>
+      </div>
+    </form>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="error" class="mt-4">
+      <div class="bg-red-50 border border-red-200 rounded-md p-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg
+              class="h-5 w-5 text-red-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-red-800">{{ error }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultado del medicamento -->
+    <div
+      *ngIf="medicamento"
+      class="mt-6"
+      [ngClass]="{
+        'bg-blue-100 border-blue-300': medicamento.color === 'blue',
+        'bg-green-100 border-green-300': medicamento.color === 'green',
+        'bg-purple-100 border-purple-300': medicamento.color === 'purple',
+        'bg-yellow-100 border-yellow-300': medicamento.color === 'yellow',
+        'bg-red-100 border-red-300': medicamento.color === 'red'
+      }"
+      class="border rounded-lg p-6"
+    >
+      <!-- Header del medicamento -->
+      <div class="flex items-center mb-4">
+        <div
+          class="w-4 h-4 rounded-full mr-3"
+          [ngClass]="{
+            'bg-blue-500': medicamento.color === 'blue',
+            'bg-green-500': medicamento.color === 'green',
+            'bg-purple-500': medicamento.color === 'purple',
+            'bg-yellow-500': medicamento.color === 'yellow',
+            'bg-red-500': medicamento.color === 'red'
+          }"
+        ></div>
+        <h3 class="text-lg font-semibold text-gray-800">
+          Medicamento encontrado
+        </h3>
+      </div>
+
+      <!-- Información principal -->
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-medium text-gray-700 mb-2">Nombre genérico</h4>
+            <p class="text-sm text-gray-600 bg-white p-3 rounded border">
+              {{ medicamento.genericName.join(", ") || "No disponible" }}
+            </p>
+          </div>
+
+          <div *ngIf="medicamento.purpose && medicamento.purpose.length > 0">
+            <h4 class="font-medium text-gray-700 mb-2">Propósito</h4>
+            <p class="text-sm text-gray-600 bg-white p-3 rounded border">
+              {{ medicamento.purpose.join(", ") }}
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-medium text-gray-700 mb-2">Indicaciones</h4>
+            <div
+              class="text-sm text-gray-600 bg-white p-3 rounded border max-h-24 overflow-y-auto"
+            >
+              {{ medicamento.indicationsAndUsage.join(" ") || "No disponible" }}
+            </div>
+          </div>
+
+          <div>
+            <h4 class="font-medium text-gray-700 mb-2">Dosis</h4>
+            <div
+              class="text-sm text-gray-600 bg-white p-3 rounded border max-h-24 overflow-y-auto"
+            >
+              {{
+                medicamento.dosageAndAdministration.join(" ") || "No disponible"
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detalles adicionales en acordeón -->
+      <div class="space-y-2">
+        <!-- Contraindicaciones -->
+        <button
+          class="w-full text-left bg-white p-3 rounded border hover:bg-gray-50 flex justify-between items-center"
+          (click)="toggleAccordion('contraindications')"
+        >
+          <span class="font-medium text-gray-700">Contraindicaciones</span>
+          <svg
+            class="w-5 h-5 text-gray-500 transition-transform duration-200"
+            [class.rotate-180]="accordionState.contraindications"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        </button>
+        <div
+          *ngIf="accordionState.contraindications"
+          class="bg-white p-3 rounded border text-sm text-gray-600"
+        >
+          {{
+            medicamento.contraindications.length > 0
+              ? medicamento.contraindications.join(" ")
+              : "No disponible"
+          }}
+        </div>
+
+        <!-- Advertencias -->
+        <button
+          class="w-full text-left bg-white p-3 rounded border hover:bg-gray-50 flex justify-between items-center"
+          (click)="toggleAccordion('warnings')"
+        >
+          <span class="font-medium text-gray-700"
+            >Advertencias y precauciones</span
+          >
+          <svg
+            class="w-5 h-5 text-gray-500 transition-transform duration-200"
+            [class.rotate-180]="accordionState.warnings"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        </button>
+        <div
+          *ngIf="accordionState.warnings"
+          class="bg-white p-3 rounded border text-sm text-gray-600"
+        >
+          {{
+            medicamento.warningsAndPrecautions.length > 0
+              ? medicamento.warningsAndPrecautions.join(" ")
+              : "No disponible"
+          }}
+        </div>
+      </div>
+
+      <!-- Formulario de configuración -->
+      <form
+        (ngSubmit)="guardarMedicamento()"
+        #formGuardar="ngForm"
+        class="mt-6 bg-white p-4 rounded-lg border space-y-4"
+      >
+        <h4 class="font-medium text-gray-800 mb-4">Configurar medicamento</h4>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label
+              for="frecuencia"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Frecuencia (horas)
+            </label>
+            <input
+              type="number"
+              id="frecuencia"
+              name="frecuencia"
+              min="1"
+              max="24"
+              class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="ej. 8"
+              [(ngModel)]="medicamento.frecuenciaHoras"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              for="horaInicio"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Hora de inicio
+            </label>
+            <input
+              type="time"
+              id="horaInicio"
+              name="horaInicio"
+              class="w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [(ngModel)]="medicamento.horaInicio"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3 pt-2">
+          <div
+            class="w-4 h-4 rounded-full"
+            [ngClass]="{
+              'bg-blue-500': medicamento.color === 'blue',
+              'bg-green-500': medicamento.color === 'green',
+              'bg-purple-500': medicamento.color === 'purple',
+              'bg-yellow-500': medicamento.color === 'yellow',
+              'bg-red-500': medicamento.color === 'red'
+            }"
+          ></div>
+          <span class="text-sm text-gray-600"
+            >Color asignado automáticamente</span
+          >
+        </div>
+
+        <div class="flex space-x-3 pt-4">
+          <button
+            type="submit"
+            class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md transition-colors focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            [disabled]="!formGuardar.form.valid"
+          >
+            Guardar medicamento
+          </button>
+          <button
+            type="button"
+            class="px-4 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+            (click)="cancelar()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
