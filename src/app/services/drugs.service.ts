@@ -45,7 +45,7 @@ export class DrugsService {
     });
   }
 
-  // Método para eliminar medicamento
+
   async deleteMedicamento(
     userId: string,
     medicamentoId: string
@@ -63,7 +63,7 @@ export class DrugsService {
     }
   }
 
-  // Método para actualizar la próxima dosis cuando se marca como tomado
+
   async marcarMedicamentoComoTomado(
   userId: string,
   medicamentoId: string,
@@ -84,15 +84,13 @@ export class DrugsService {
     const updateData = {
       proximaDosis: Timestamp.fromDate(nuevaProximaDosis),
       estado: 'activo',
-      ultimaActualizacion: Timestamp.now() // Agregar timestamp de última actualización
+      ultimaActualizacion: Timestamp.now()
     };
 
-    console.log('Datos a actualizar:', updateData);
 
     await updateDoc(medicamentoDocRef, updateData);
 
     console.log('✅ Medicamento actualizado exitosamente en Firebase');
-    console.log('===============================');
   } catch (error) {
     console.error('❌ Error al actualizar medicamento en Firebase:', error);
     throw error;

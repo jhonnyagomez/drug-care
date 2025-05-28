@@ -65,7 +65,6 @@ export class RegisterComponent {
       .then(() => {
         this.successMessage = '¡Registro exitoso! Serás redirigido al login...';
 
-        // Redirigir después de 3 segundos para que el usuario vea el mensaje
         setTimeout(() => {
           this.router.navigate(['/auth/login'], {
             queryParams: {

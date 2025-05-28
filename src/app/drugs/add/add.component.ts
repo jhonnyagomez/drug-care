@@ -20,11 +20,9 @@ export class AddComponent {
   medicamento: Medicamento | null = null;
   error: string = '';
 
-  // Colores disponibles para asignación automática
   private readonly colores: ('blue' | 'green' | 'purple' | 'yellow' | 'red')[] =
     ['blue', 'green', 'purple', 'yellow', 'red'];
 
-  // Estado del acordeón
   accordionState = {
     contraindications: false,
     warnings: false,
@@ -37,16 +35,10 @@ export class AddComponent {
     private router: Router
   ) {}
 
-  /**
-   * Genera un color aleatorio para el medicamento
-   */
   private getRandomColor(): 'blue' | 'green' | 'purple' | 'yellow' | 'red' {
     return this.colores[Math.floor(Math.random() * this.colores.length)];
   }
 
-  /**
-   * Alterna el estado del acordeón
-   */
   toggleAccordion(section: 'contraindications' | 'warnings') {
     this.accordionState[section] = !this.accordionState[section];
   }
@@ -85,12 +77,11 @@ export class AddComponent {
           horaInicio: '',
           proximaDosis: new Date(),
           estado: 'proximo',
-          color: this.getRandomColor(), // Color asignado automáticamente
+          color: this.getRandomColor(),
           fechaCreacion: new Date(),
           activo: true,
         };
 
-        // Reset accordion state
         this.accordionState = {
           contraindications: false,
           warnings: false,
@@ -105,7 +96,6 @@ export class AddComponent {
   guardarMedicamento() {
     if (!this.medicamento) return;
 
-    // Validar campos requeridos
     if (!this.medicamento.frecuenciaHoras || !this.medicamento.horaInicio) {
       this.error = 'Debe completar todos los campos requeridos.';
       return;
@@ -121,7 +111,6 @@ export class AddComponent {
     proxima.setSeconds(0);
     proxima.setMilliseconds(0);
 
-    // Bucle: sumar frecuencia hasta que sea futuro
     while (proxima <= ahora) {
       proxima.setHours(proxima.getHours() + this.medicamento.frecuenciaHoras);
     }
@@ -182,7 +171,6 @@ export class AddComponent {
   }
 
   private uuidv4(): string {
-    // Simple UUID v4 generator
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
       function (c) {

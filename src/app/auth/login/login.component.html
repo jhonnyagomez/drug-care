@@ -1,11 +1,9 @@
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4 relative overflow-hidden">
-  <!-- Elementos decorativos flotantes -->
   <div class="absolute top-10 left-10 w-20 h-20 bg-white opacity-10 rounded-full animate-pulse"></div>
   <div class="absolute bottom-20 right-20 w-32 h-32 bg-white opacity-5 rounded-full animate-bounce" style="animation-duration: 3s;"></div>
   <div class="absolute top-1/2 left-5 w-16 h-16 bg-white opacity-10 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
 
   <div class="glass-effect rounded-3xl p-8 w-full max-w-md shadow-2xl transform hover:scale-105 transition-all duration-300">
-    <!-- Header con icono -->
     <div class="text-center mb-8">
       <div class="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,10 +15,8 @@
       <p class="text-white/70 text-sm">Inicia sesión para continuar tu experiencia</p>
     </div>
 
-    <!-- Formulario -->
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-6">
 
-      <!-- Campo Email -->
       <div class="space-y-2">
         <label class="block text-sm font-medium text-white/90">Correo electrónico</label>
         <div class="relative">
@@ -36,13 +32,11 @@
             [class]="getInputClasses('email')"
           />
         </div>
-        <!-- Error message -->
         <div *ngIf="isFieldInvalid('email')" class="text-red-300 text-sm mt-1 animate-pulse">
           {{ getFieldError('email') }}
         </div>
       </div>
 
-      <!-- Campo Contraseña -->
       <div class="space-y-2">
         <label class="block text-sm font-medium text-white/90">Contraseña</label>
         <div class="relative">
@@ -73,13 +67,11 @@
             </svg>
           </button>
         </div>
-        <!-- Error message -->
         <div *ngIf="isFieldInvalid('password')" class="text-red-300 text-sm mt-1 animate-pulse">
           {{ getFieldError('password') }}
         </div>
       </div>
 
-      <!-- Checkbox recordarme y olvidar contraseña -->
       <div class="flex items-center justify-between">
         <label class="flex items-center">
           <input
@@ -97,7 +89,6 @@
         </a>
       </div>
 
-      <!-- Botón de login -->
       <button
         type="submit"
         [disabled]="loginForm.invalid || loading"
@@ -112,14 +103,12 @@
       </button>
     </form>
 
-    <!-- Divisor -->
     <div class="flex items-center my-6">
       <div class="flex-grow h-px bg-white/20"></div>
       <span class="px-4 text-sm text-white/60">¿No tienes cuenta?</span>
       <div class="flex-grow h-px bg-white/20"></div>
     </div>
 
-    <!-- Link de registro -->
     <div class="text-center">
       <a
         routerLink="/auth/register"

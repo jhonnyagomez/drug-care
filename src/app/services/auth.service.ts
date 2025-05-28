@@ -33,7 +33,7 @@ export class AuthService {
     });
   }
 
-  // Observables
+
   get currentUser$(): Observable<User | null> {
     return this.currentUserSubject.asObservable();
   }
@@ -42,7 +42,7 @@ export class AuthService {
     return this.currentUser$.pipe(map((user) => !!user));
   }
 
-  // Getters sincrónicos
+
   get currentUser(): User | null {
     return this.currentUserSubject.value;
   }
@@ -135,7 +135,7 @@ export class AuthService {
     }
   }
 
-  // Método para esperar a que se complete la verificación del estado de auth
+
   waitForAuthState(): Promise<User | null> {
     return new Promise((resolve) => {
       if (this.authStateChecked) {
@@ -151,7 +151,7 @@ export class AuthService {
     });
   }
 
-  // Manejo de errores mejorado
+
   private handleAuthError(error: any): Error {
     let message = 'Error desconocido';
 

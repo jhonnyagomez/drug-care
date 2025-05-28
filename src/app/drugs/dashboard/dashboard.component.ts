@@ -31,10 +31,8 @@ export class DashboardComponent implements OnInit {
     tipo: 'warning' | 'error' | 'info';
   }> = [];
 
-  // Sonido de alerta (opcional)
   private audioAlerta: HTMLAudioElement | null = null;
 
-  // NUEVO: Cache para las próximas dosis del día
   proximasDosisDelDia: Array<{
     medicamento: string;
     hora: Date;
@@ -90,13 +88,12 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    // Actualizar cada minuto E incluir verificación de alertas
     setInterval(() => {
       this.actualizarProximasDosis();
       this.actualizarEstados();
       this.calcularStats();
       this.actualizarProximasDosisDelDia();
-      this.verificarAlertasDosis(); // NUEVA LÍNEA
+      this.verificarAlertasDosis();
     }, 60000);
   }
 
@@ -108,18 +105,15 @@ export class DashboardComponent implements OnInit {
 
       const proximaDosis = this.convertirADate(medicamento.proximaDosis);
 
-      // Si la próxima dosis ya pasó (está vencida)
       if (proximaDosis <= ahora) {
         const medicamentoId = medicamento.id;
 
-        // Solo alertar una vez por medicamento
         if (!this.medicamentosYaAlertados.has(medicamentoId)) {
           const nombre = this.obtenerNombrePrincipal(medicamento);
           alert(`⏰ Es hora de tomar: ${nombre}`);
 
           this.medicamentosYaAlertados.add(medicamentoId);
 
-          // Limpiar el registro después de 5 minutos
           setTimeout(() => {
             this.medicamentosYaAlertados.delete(medicamentoId);
           }, 300000);
@@ -128,32 +122,25 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Verificar notificaciones cada 30 segundos
-  // Método para convertir timestamps de Firebase a Date
   private convertirADate(timestamp: any): Date {
     if (!timestamp) return new Date();
 
-    // Si ya es un Date
     if (timestamp instanceof Date) {
       return timestamp;
     }
 
-    // Si es un timestamp de Firebase con método toDate()
     if (timestamp.toDate && typeof timestamp.toDate === 'function') {
       return timestamp.toDate();
     }
 
-    // Si es un timestamp en segundos (Firebase)
     if (typeof timestamp === 'object' && timestamp.seconds) {
       return new Date(timestamp.seconds * 1000);
     }
 
-    // Si es un timestamp en milisegundos
     if (typeof timestamp === 'number') {
       return new Date(timestamp);
     }
 
-    // Si es una string
     if (typeof timestamp === 'string') {
       return new Date(timestamp);
     }
@@ -177,26 +164,21 @@ export class DashboardComponent implements OnInit {
     const ahora = new Date();
     const [hora, minuto] = horaInicio.split(':').map(Number);
 
-    // Crear fecha para la primera dosis de hoy
     const primeraDosisHoy = new Date();
     primeraDosisHoy.setHours(hora, minuto, 0, 0);
 
-    // Si la primera dosis de hoy ya pasó, calcular desde la última dosis teórica
     if (primeraDosisHoy <= ahora) {
-      // Calcular cuántas dosis han pasado desde la primera dosis de hoy
       const tiempoTranscurrido = ahora.getTime() - primeraDosisHoy.getTime();
       const dosisTranscurridas = Math.floor(
         tiempoTranscurrido / (frecuenciaHoras * 60 * 60 * 1000)
       );
 
-      // La próxima dosis será la siguiente después de las que ya pasaron
       const proximaDosis = new Date(
         primeraDosisHoy.getTime() +
           (dosisTranscurridas + 1) * frecuenciaHoras * 60 * 60 * 1000
       );
       return proximaDosis;
     } else {
-      // Si la primera dosis de hoy aún no ha llegado, esa es la próxima
       return primeraDosisHoy;
     }
   }
@@ -209,7 +191,6 @@ export class DashboardComponent implements OnInit {
 
       const proximaDosis = this.convertirADate(medicamento.proximaDosis);
 
-      // Solo recalcular si la próxima dosis ya pasó
       if (proximaDosis <= ahora) {
         const nuevaProximaDosis = this.calcularProximaDosis(
           medicamento.horaInicio,
@@ -240,11 +221,6 @@ export class DashboardComponent implements OnInit {
       const tiempoHastaProximaDosis = proximaDosis.getTime() - ahora.getTime();
       const minutosHastaProximaDosis = tiempoHastaProximaDosis / (1000 * 60);
 
-      console.log('---------------------------------------------');
-      console.log(ahora.toLocaleString());
-      console.log(medicamento.proximaDosis.toLocaleString());
-
-      // Mostrar alerta solo si no se ha mostrado en los últimos 2 minutos
       if (
         Math.abs(minutosHastaProximaDosis) < 1 &&
         !this.medicamentosNotificados.has(medicamento.id)
@@ -256,7 +232,6 @@ export class DashboardComponent implements OnInit {
         );
         this.medicamentosNotificados.add(medicamento.id);
 
-        // Quitar del set después de 2 minutos (120000 ms)
         setTimeout(() => {
           this.medicamentosNotificados.delete(medicamento.id);
         }, 320000);
@@ -285,12 +260,10 @@ export class DashboardComponent implements OnInit {
     let dosisTotales = 0;
     let dosisTomadas = 0;
 
-    // Contar medicamentos activos
     this.medicamentosActivos = this.medicamentos.filter(
       (m) => m.activo === true
     ).length;
 
-    // Calcular dosis del día actual
     this.medicamentos.forEach((medicamento) => {
       if (!medicamento.activo) return;
 
@@ -305,16 +278,13 @@ export class DashboardComponent implements OnInit {
       let dosisHora = new Date(inicioDelDia);
       dosisHora.setHours(hora, minuto, 0, 0);
 
-      // Contar todas las dosis del día
       while (dosisHora <= finDelDia) {
         dosisTotales++;
 
-        // Si la dosis ya pasó, contarla como tomada
         if (dosisHora < ahora) {
           dosisTomadas++;
         }
 
-        // Avanzar a la siguiente dosis
         dosisHora = new Date(dosisHora.getTime() + frecuencia * 60 * 60 * 1000);
       }
     });
@@ -413,7 +383,6 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  // MEJORADO: Marcar como tomado y actualizar inmediatamente la lista
   async marcarComoTomado(medicamento: Medicamento): Promise<void> {
     try {
       const user = await firstValueFrom(this.authService.currentUser$);
@@ -435,22 +404,15 @@ export class DashboardComponent implements OnInit {
         nuevaProximaDosis.toLocaleString()
       );
 
-      // Actualizar en Firebase
       await this.medicamentoService.marcarMedicamentoComoTomado(
         user.uid,
         medicamento.id,
         nuevaProximaDosis
       );
 
-      // IMPORTANTE: Limpiar notificaciones del medicamento actual
-
-      // Actualizar localmente INMEDIATAMENTE
       medicamento.proximaDosis = nuevaProximaDosis;
       medicamento.estado = 'activo';
 
-      // CLAVE: Reprogramar notificaciones para este medicamento específico
-
-      // Actualizar todo inmediatamente
       this.actualizarEstados();
       this.calcularStats();
       this.actualizarProximasDosisDelDia();
@@ -479,20 +441,14 @@ export class DashboardComponent implements OnInit {
       )}`
     );
 
-    // Limpiar notificaciones actuales
-
-    // Programar nueva notificación en 5 minutos
     console.log('✅ Notificación pospuesta por 5 minutos');
   }
 
-  // NUEVO: Descartar notificación
   descartarNotificacion(medicamentoId: string): void {
     this.notificacionesActivas = this.notificacionesActivas.filter(
       (n) => n.id !== medicamentoId
     );
   }
-
-  // NUEVO: Verificar si las notificaciones están habilitadas
 
   cerrarSesion(): void {
     if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
@@ -617,12 +573,10 @@ export class DashboardComponent implements OnInit {
     return 'Buenas noches';
   }
 
-  // NUEVO: Método para actualizar el cache de próximas dosis del día
   private actualizarProximasDosisDelDia(): void {
     this.proximasDosisDelDia = this.calcularProximasDosisDelDia();
   }
 
-  // MEJORADO: Método para obtener todas las próximas dosis del día ordenadas
   private calcularProximasDosisDelDia(): Array<{
     medicamento: string;
     hora: Date;
@@ -641,11 +595,9 @@ export class DashboardComponent implements OnInit {
     this.medicamentos.forEach((med) => {
       if (!med.activo) return;
 
-      // CAMBIO CLAVE: Usar la próxima dosis real del medicamento, no calcular desde hora inicio
       const proximaDosisReal = this.convertirADate(med.proximaDosis);
       let dosisHora = new Date(proximaDosisReal);
 
-      // Agregar la próxima dosis real si está dentro del día
       if (dosisHora > ahora && dosisHora <= finDelDia) {
         dosisDelDia.push({
           medicamento: this.obtenerNombrePrincipal(med),
@@ -657,7 +609,6 @@ export class DashboardComponent implements OnInit {
         });
       }
 
-      // Calcular las siguientes dosis del día basándose en la frecuencia
       let siguienteDosis = new Date(
         dosisHora.getTime() + med.frecuenciaHoras * 60 * 60 * 1000
       );
@@ -680,11 +631,9 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    // Ordenar por hora y devolver
     return dosisDelDia.sort((a, b) => a.hora.getTime() - b.hora.getTime());
   }
 
-  // PÚBLICO: Método que usa el template para obtener las próximas dosis
   obtenerProximasDosisDelDia(): Array<{
     medicamento: string;
     hora: Date;
@@ -714,7 +663,6 @@ export class DashboardComponent implements OnInit {
         console.log(`   - Minutos hasta: ${Math.round(minutosHasta)}`);
       });
 
-    // Debug del servicio de notificaciones
     console.log('=====================================');
   }
 
